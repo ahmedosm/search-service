@@ -59,8 +59,9 @@ public class RetriveDataInitialService {
 			}
 			
 		} catch (DataLoadingException e) {
-			SpringApplication.exit(appContext, () -> 0);
-			System.exit(0);
+			e.printStackTrace();
+			//SpringApplication.exit(appContext, () -> 0);
+			//System.exit(0);
 		}
 		return null;
 	}
