@@ -18,7 +18,7 @@ import reactor.core.publisher.Flux;
 
 @Service
 public class MobileDeviceSearchServiceImpl implements MobileDeviceSearchService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MobileDeviceSearchServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MobileDeviceSearchServiceImpl.class);
 	@Autowired
 	MobileDeviceRepository mobileDeviceRepository;
 	@Autowired
@@ -27,7 +27,7 @@ public class MobileDeviceSearchServiceImpl implements MobileDeviceSearchService 
 	public Flux<MobileDevice> filterMobileDevice(MobileDeviceCriteriaDto requestDto) throws MobileSerachException {
 		try {
 		MobileDevice mobileDevice=searchHelper.mapMobileDeviceSearchRequest(requestDto);
-		LOGGER.info(mobileDevice.toString());
+		LOG.info(mobileDevice.toString());
 		Example<MobileDevice> example = Example.of(mobileDevice,
 				ExampleMatcher.matchingAll().withStringMatcher(StringMatcher.CONTAINING).withIgnoreCase());
 		return mobileDeviceRepository.findAll(example);

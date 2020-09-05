@@ -20,8 +20,8 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/mobile")
 
 @RestController
-public class SearchController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+public class MobileSearchController {
+	private static final Logger LOG = LoggerFactory.getLogger(MobileSearchController.class);
 	@Autowired
 	private MobileDeviceSearchService mobileDeviceSearchService;
 	
@@ -41,7 +41,7 @@ public class SearchController {
 			@RequestParam(required = false) String battery,
 			@Parameter(hidden = true)
 			MobileDeviceCriteriaDto mobileDeviceCriteriaDto) throws MobileSerachException {	
-		LOGGER.debug(mobileDeviceCriteriaDto.toString());
+		LOG.debug(mobileDeviceCriteriaDto.toString());
 		return mobileDeviceSearchService.filterMobileDevice(mobileDeviceCriteriaDto);
 	}
 

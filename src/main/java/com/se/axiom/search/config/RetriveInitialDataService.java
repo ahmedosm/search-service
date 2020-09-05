@@ -21,9 +21,9 @@ import com.se.axiom.search.model.MobileDevice;
 import com.se.axiom.search.repository.MobileDeviceRepository;
 
 @Configuration
-public class RetriveDataInitialService {
+public class RetriveInitialDataService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RetriveDataInitialService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RetriveInitialDataService.class);
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -72,12 +72,12 @@ public class RetriveDataInitialService {
 			mobileList = retriveMobileData();
 		} catch (IntegrationException e) {
 			try {
-				LOGGER.info("load data from static json");
+				LOG.info("load data from static json");
 				mobileList = mapper.readValue(new ClassPathResource(fileName).getFile(),
 						mapper.getTypeFactory().constructCollectionType(List.class, MobileDevice.class));
 
 			} catch (Exception e1) {
-				LOGGER.error("Error while loading json file  " + e1.getMessage());
+				LOG.error("Error while loading json file  " + e1.getMessage());
 				throw new DataLoadingException(CustomError.INITIALDATA.getMessage(), CustomError.INITIALDATA.getCode());
 			}
 		}
@@ -91,7 +91,7 @@ public class RetriveDataInitialService {
 			mobileList = mapper.readValue(restTemplate.getForEntity(serviceUrl, String.class).getBody(),
 					mapper.getTypeFactory().constructCollectionType(List.class, MobileDevice.class));
 		} catch (Exception e) {
-			LOGGER.error("Error while retrive data " + e.getMessage());
+			LOG.error("Error while retrive data " + e.getMessage());
 			throw new IntegrationException(CustomError.INTEGRATION.getMessage(), CustomError.INTEGRATION.getCode());
 		}
 		return mobileList;
