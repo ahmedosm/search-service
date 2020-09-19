@@ -19,19 +19,25 @@ import reactor.core.publisher.Flux;
 @Service
 public class MobileDeviceSearchServiceImpl implements MobileDeviceSearchService {
 	private static final Logger LOG = LoggerFactory.getLogger(MobileDeviceSearchServiceImpl.class);
-	@Autowired
-	MobileDeviceRepository mobileDeviceRepository;
-	@Autowired
-	MobileDeviceSearchHelper searchHelper;
+	
+	private final MobileDeviceRepository mobileDeviceRepository;
+	
+	private final MobileDeviceSearchHelper mobileDeviceSearchHelper;
+	
+	public MobileDeviceSearchServiceImpl(MobileDeviceRepository mobileDeviceRepository,MobileDeviceSearchHelper mobileDeviceSearchHelper) {
+		this.mobileDeviceRepository=mobileDeviceRepository;
+		this.mobileDeviceSearchHelper=mobileDeviceSearchHelper;
+	}
 
 	public Flux<MobileDevice> filterMobileDevice(MobileDeviceCriteriaDto requestDto) throws MobileSerachException {
 		try {
-		MobileDevice mobileDevice=searchHelper.mapMobileDeviceSearchRequest(requestDto);
+		MobileDevice mobileDevice=mobileDeviceSearchHelper.mapMobileDeviceSearchRequest(requestDto);
 		LOG.info(mobileDevice.toString());
 		Example<MobileDevice> example = Example.of(mobileDevice,
 				ExampleMatcher.matchingAll().withStringMatcher(StringMatcher.CONTAINING).withIgnoreCase());
-		return mobileDeviceRepository.findAll(example);
+		return mobileDeviceRepository.findAll(example);		
 		}catch (Exception e) {
+			LOG.error(e.getMessage());
 			throw new MobileSerachException(CustomError.MOBILESERACH.getMessage(),CustomError.MOBILESERACH.getCode());
 		}
 	}

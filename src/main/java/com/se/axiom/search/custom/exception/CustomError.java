@@ -3,7 +3,7 @@ package com.se.axiom.search.custom.exception;
 public enum CustomError {
 	 INTEGRATION("600", "Error while retrive data from Thirdparty service"),
 	 INITIALDATA("601", "Error to load inital data"),
-	 MOBILESERACH("603", "Exception happend while filter mobile deice ");
+	 MOBILESERACH("603", "Exception happend while filter mobile device ");
 	  private final String code;
 	  private final String message;
 

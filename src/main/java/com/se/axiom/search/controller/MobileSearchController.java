@@ -22,9 +22,12 @@ import reactor.core.publisher.Flux;
 @RestController
 public class MobileSearchController {
 	private static final Logger LOG = LoggerFactory.getLogger(MobileSearchController.class);
-	@Autowired
-	private MobileDeviceSearchService mobileDeviceSearchService;
 	
+	private final MobileDeviceSearchService mobileDeviceSearchService;
+	
+	public MobileSearchController(MobileDeviceSearchService mobileDeviceSearchService) {
+		this.mobileDeviceSearchService=mobileDeviceSearchService;
+	}
 	
 	@GetMapping("/search")
 	public Flux<MobileDevice> mobileDeviceSearch(

@@ -25,21 +25,19 @@ public class RetriveInitialDataService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RetriveInitialDataService.class);
 
+	private final ObjectMapper mapper;
+	private final MobileDeviceRepository mobileDeviceRepository;
 	@Autowired
-	RestTemplate restTemplate;
-	@Autowired
-	private ObjectMapper mapper;
-
-	@Autowired
-	MobileDeviceRepository mobileDeviceRepository;
+	private ApplicationContext appContext;
+	public RetriveInitialDataService(ObjectMapper mapper, MobileDeviceRepository mobileDeviceRepository) {
+		this.mapper = mapper;
+		this.mobileDeviceRepository = mobileDeviceRepository;
+	}
 
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-
-	@Autowired
-	private ApplicationContext appContext;
 
 	@Value("${mobile.device.service.url}")
 	private String serviceUrl;
@@ -52,20 +50,26 @@ public class RetriveInitialDataService {
 		try {
 			mobileDeviceRepository.deleteAll().subscribe();
 			List<MobileDevice> mobileList = loadMobileData();
-			if(mobileList!=null &&! mobileList.isEmpty()) {
+			if (mobileList != null && !mobileList.isEmpty()) {
 				mobileDeviceRepository.saveAll(mobileList).subscribe();
-			}else {
-				
+			} else {
+
 			}
-			
+
 		} catch (DataLoadingException e) {
 			e.printStackTrace();
-			//SpringApplication.exit(appContext, () -> 0);
-			//System.exit(0);
+			// SpringApplication.exit(appContext, () -> 0);
+			// System.exit(0);
 		}
 		return null;
 	}
 
+	/**
+	 * load mobile device data from stored file as an initial data
+	 * 
+	 * @return
+	 * @throws DataLoadingException
+	 */
 	public List<MobileDevice> loadMobileData() throws DataLoadingException {
 		List<MobileDevice> mobileList = null;
 		try {
@@ -85,10 +89,17 @@ public class RetriveInitialDataService {
 
 	}
 
+	/**
+	 * Retrieve mobiledevice data from Thirdparty service
+	 * 
+	 * @return
+	 * @throws IntegrationException
+	 */
+
 	private List<MobileDevice> retriveMobileData() throws IntegrationException {
 		List<MobileDevice> mobileList = null;
 		try {
-			mobileList = mapper.readValue(restTemplate.getForEntity(serviceUrl, String.class).getBody(),
+			mobileList = mapper.readValue(restTemplate().getForEntity(serviceUrl, String.class).getBody(),
 					mapper.getTypeFactory().constructCollectionType(List.class, MobileDevice.class));
 		} catch (Exception e) {
 			LOG.error("Error while retrive data " + e.getMessage());
